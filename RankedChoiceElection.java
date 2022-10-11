@@ -1,7 +1,7 @@
 //Emma Trauber (@etrauber) and Cassidy McKee (@cmckee114)
 import java.util.*;
 import java.util.ArrayList;
-public class RankedChoiceElectionEC{
+public class RankedChoiceElection{
 
     public static String bordaCount(ArrayList<ArrayList<Integer>> votes, ArrayList<String> candidates){
         //create arraylist to hold the total amount of votes per candidate
