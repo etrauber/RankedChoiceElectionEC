@@ -1,3 +1,4 @@
+//Emma Trauber (@etrauber) and Cassidy McKee (@cmckee114)
 import java.util.*;
 import java.util.ArrayList;
 public class RankedChoiceElectionEC{
