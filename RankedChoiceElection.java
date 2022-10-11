@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class RankedChoiceElectionEC{
 
     public static String bordaCount(ArrayList<ArrayList<Integer>> votes, ArrayList<String> candidates){
-        //create arraylist to hold the total amount of votes per candidtae
+        //create arraylist to hold the total amount of votes per candidate
         ArrayList<Integer> voterCounter = new ArrayList<>();
         for (int i =0; i< candidates.size(); i++){
             voterCounter.add(0);
@@ -32,62 +32,65 @@ public class RankedChoiceElectionEC{
     }
 
     public static String instantRunOff(ArrayList<ArrayList<Integer>> votes, ArrayList<String> candidates){
+        //variable to help store majority value 
         String majority = null;
-        //1. look at only 1st choices
+        // create new arraylist where each the index of each col represents the number choice of each candidate on the voter ballot (ex/ index of col 0 = first choices)
         ArrayList<ArrayList<String>> order = new ArrayList<>();
+        //for loop to iterate through each row and re-order it based on the preferances of voter
         for(int r=0; r<votes.size(); r++){
+            //create counter arraylist for each row - to add to broader order arraylist 
             ArrayList<String> row = new ArrayList<>();
+            //fill in row-arraylist with empty spaces in order to set these places later ("" = place holders) 
             for(int i=0; i<candidates.size(); i++){
                 row.add("");
             }
+            //initalize rows 
             for(int c=0; c<votes.get(r).size(); c++){
+                //index = preferance - 1 (since index starts at 0), String = candidate - represented as col correlates to candidate arraylist
                 row.set(votes.get(r).get(c)-1, candidates.get(c));
             }
+            //add individual row to broader order arraylist
             order.add(row);
         }
 
-        System.out.println(order);
-
+        //create while loop to run as long as no majority is found
         while(majority == null){
-            //2. majority?
-            //#ballots+1 /2 
+            //create counter array to count up amount of first place votes each candidate got - each index = specific candidate
             int[] counter = new int[candidates.size()];
+            //for loop to iterate through first column in order arraylist to count up votes
             for(int i=0; i<order.size(); i++){
-                //checking first colomn of arraylist order
-                    //looking at index within candidates
+                //index = the index of the candidate of the current row being looked at (all in col 0)
                 int index = candidates.indexOf(order.get(i).get(0));
+                //add 1 to counter at index
                 counter[index] += 1;
             }
-            System.out.println(Arrays.toString(counter));
 
+            //for loop to determine if there is a majoirty by looking at counter array
             for(int i=0; i<counter.length; i++){
                 if(counter[i] >= votes.size()/2 + 1){
-                    System.out.println("majority");
-                    majority = candidates.get(i);
+                    //return candidate that has the majoirty votes
                     return candidates.get(i);
                 }
             }
-            System.out.println(majority);
 
-            //3. If no majoirty winner: find the candidate with the least amount of first choice votes
-                //check if candidate got no first choice cuz that would still be least
+            //If no majoirty winner: find the candidate with the least amount of first choice votes
+            //initalizing with candidate at index 0 (if there is a tie - candidate at index 0 will be eliminate first)
             int min = counter[0];
             int candidateIndex = 0;
+            //for loop to determine which place has the fewest votes - keeps track of index as it corresponds to index of candidate in arraylist
             for(int i=1; i<counter.length; i++){
                 if(counter[i] < min){
                     min = counter[i];
                     candidateIndex = i;
                 }
             }
-            System.out.println("least");
-            System.out.println(candidates.get(candidateIndex));
 
-            //4. delete all occurances of the worst vote - in every ballot
+
+            //delete all occurances of the worst vote in every ballot
             for(int r=0; r<order.size(); r++){
                 order.get(r).remove(candidates.get(candidateIndex));
             }
             candidates.remove(candidateIndex);
-            System.out.println(order);
         }
     return majority;
 
@@ -95,8 +98,10 @@ public class RankedChoiceElectionEC{
     
     public static void main (String[] args){
         ArrayList<ArrayList<Integer>> arrList = new ArrayList<>();
-        int[][] arr = {{3, 4, 2, 1}, {3, 1, 4, 2}, {1, 4, 2, 3}, {1, 2, 3, 4}, {2, 1, 3, 4}, {2, 1, 3, 4}, {3, 4, 2, 1}, {2, 3, 1, 4}, {3, 1, 2, 4}};
-        //int[][] arr = {{1,2,3,4}, {2,3,4,1}};
+        //int[][] arr = {{3, 4, 2, 1}, {3, 1, 4, 2}, {1, 4, 2, 3}, {1, 2, 3, 4}, {2, 1, 3, 4}, {2, 1, 3, 4}, {3, 4, 2, 1}, {2, 3, 1, 4}, {3, 1, 2, 4}};
+        //int[][] arr = {{1,2,3}, {1,2,3}, {2,3,1}, {2,3,1}, {2,3,1}};
+        //int[][] arr = {{1,2,3}, {3,2,1}, {3,1,2}, {2,3,1}};
+        int[][] arr = {{1,2,3}, {1,2,3}, {2,3,1}, {2,3,1}, {3,1,2}, {3,1,2}};
         for(int i=0; i<arr.length; i++){
             ArrayList<Integer> row = new ArrayList<>();
             for(int j=0; j<arr[i].length; j++){
@@ -105,8 +110,9 @@ public class RankedChoiceElectionEC{
             arrList.add(row);
         }
         ArrayList<String> candidates = new ArrayList<>(Arrays.asList("You Belong with me", "All too well", "Love Story", "Fifteen"));
-        System.out.println(bordaCount(arrList, candidates));
-        System.out.println(instantRunOff(arrList, candidates));
+        ArrayList<String> letters = new ArrayList<>(Arrays.asList("A","B","C"));
+        System.out.println("BordaCount: " + bordaCount(arrList, letters));
+        System.out.println("InstantRunOff: " + instantRunOff(arrList, letters));
 
     }
 
